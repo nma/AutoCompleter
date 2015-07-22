@@ -1,29 +1,20 @@
-package com.fun;
+package com.fun.Trie;
 
 import java.util.*;
 
 /**
  * Created by nickma on 2015-07-21.
  */
-public class Trie {
+public class BasicTrie implements Trie {
 
+    @Override
     public TrieNode getRoot() {
         return root;
     }
 
-    public static class TrieNode {
-        public String key;
-        public Boolean isWord = false;
-
-        public HashMap<String, TrieNode> children = new HashMap<>();
-
-        public TrieNode(String key) {
-            this.key = key;
-        }
-    }
-
     private TrieNode root = new TrieNode(null);
 
+    @Override
     public void insert(String line) {
 
         if (line == null || line.isEmpty()) {
@@ -43,6 +34,7 @@ public class Trie {
         curNode.isWord = true;
     }
 
+    @Override
     public boolean find(String line) {
         boolean found = false;
 
@@ -54,6 +46,7 @@ public class Trie {
         return found;
     }
 
+    @Override
     public TrieNode lookup(String prefix) {
         if (prefix == null || prefix.isEmpty()) {
             return null;
@@ -72,6 +65,7 @@ public class Trie {
         return curNode;
     }
 
+    @Override
     public Set<String> allSuffixes(TrieNode node, String prefix) {
         Set<String> foundSuffixes = new HashSet<>();
 

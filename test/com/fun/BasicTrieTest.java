@@ -1,5 +1,7 @@
 package com.fun;
 
+import com.fun.Trie.BasicTrie;
+import com.fun.Trie.TrieNode;
 import org.junit.Test;
 
 import java.util.Set;
@@ -10,20 +12,20 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by nickma on 2015-07-21.
  */
-public class TrieTest {
+public class BasicTrieTest {
 
     @Test
     public void testTrieNode() {
-        Trie t = new Trie();
+        BasicTrie t = new BasicTrie();
         t.insert("a");
 
-        Trie.TrieNode gotNode = t.getRoot();
+        TrieNode gotNode = t.getRoot();
         assertThat(gotNode, is(notNullValue()));
         assertThat(gotNode.children.size(), is(1));
         assertThat(gotNode.isWord, is(false));
         assertThat(gotNode.key, is(nullValue()));
 
-        Trie.TrieNode insertedNode = gotNode.children.get("a");
+        TrieNode insertedNode = gotNode.children.get("a");
         assertThat(insertedNode.children.size(), is(0));
         assertThat(insertedNode.isWord, is(true));
         assertThat(insertedNode.key, is("a"));
@@ -36,7 +38,7 @@ public class TrieTest {
             "abc", "a", "abcde"
         };
 
-        Trie t = new Trie();
+        BasicTrie t = new BasicTrie();
         for (String line : testStrings) {
             t.insert(line);
         }
@@ -52,14 +54,15 @@ public class TrieTest {
     @Test
     public void testFindAllSuffixes() {
 
-        Trie t = new Trie();
+        BasicTrie t = new BasicTrie();
         t.insert("abc");
         t.insert("abcde");
         t.insert("abcdef");
 
-        Trie.TrieNode node = t.lookup("ab");
+        TrieNode node = t.lookup("ab");
         Set<String> allSuffixes = t.allSuffixes(node, "ab");
 
         assertThat(allSuffixes, hasItems("abc", "abcde", "abcdef"));
     }
+
 }
