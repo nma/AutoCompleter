@@ -5,6 +5,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
+import java.util.List;
 
 public class Main {
 
@@ -22,5 +23,18 @@ public class Main {
         cmd.parseArgument(args);
 
         File inputFile = new File(arguments.fileName);
+        AutoCompleter autoCompleter = new AutoCompleter(inputFile);
+        autoCompleter.preprocess();
+
+        for (String stringToAutoComplete : arguments.autoCompleteStrings.split(",")) {
+            System.out.println("AutoComplete: " + stringToAutoComplete);
+            List<String> potentialCandidates = autoCompleter.lookup(stringToAutoComplete);
+
+            System.out.println("Potential Candidates:");
+            for (String potentialCandidate : potentialCandidates) {
+                System.out.println(potentialCandidate);
+            }
+            System.out.println("===End Batch===");
+        }
     }
 }
