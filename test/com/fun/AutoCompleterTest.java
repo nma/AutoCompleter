@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
@@ -28,6 +29,7 @@ public class AutoCompleterTest {
         p.preprocess();
 
         List<String> words = p.lookup("arm");
+        assertThat(words.size(), is(6));
         assertThat(words, hasItems("armchair", "armour", "armoires"));
         assertThat(words, not(hasItems("armchairer", "armourz", "armoirers")));
     }

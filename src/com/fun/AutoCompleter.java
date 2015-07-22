@@ -28,9 +28,14 @@ public class AutoCompleter {
         }
     }
 
-    public List<String> lookup(String stringToAutoComplete) {
-        List<String> potentialCandidates = new ArrayList<String>();
-
+    public List<String> lookup(String prefix) {
+        List<String> potentialCandidates = new ArrayList<>();
+        Trie.TrieNode prefixNode = trie.lookup(prefix);
+        if (prefixNode != null && !prefixNode.isWord) {
+            for (String suffix : trie.allSuffixes(prefixNode, prefix)) {
+                potentialCandidates.add(prefix + suffix);
+            }
+        }
         return potentialCandidates;
     }
 }

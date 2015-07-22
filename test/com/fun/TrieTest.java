@@ -2,6 +2,8 @@ package com.fun;
 
 import org.junit.Test;
 
+import java.util.Set;
+
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -41,7 +43,23 @@ public class TrieTest {
 
         assertThat(t.find("a"), is(true));
         assertThat(t.find("ab"), is(false));
+        assertThat(t.find("d"), is(false));
         assertThat(t.find("abc"), is(true));
         assertThat(t.find("abcde"), is(true));
+    }
+
+
+    @Test
+    public void testFindAllSuffixes() {
+
+        Trie t = new Trie();
+        t.insert("abc");
+        t.insert("abcde");
+        t.insert("abcdef");
+
+        Trie.TrieNode node = t.lookup("ab");
+        Set<String> allSuffixes = t.allSuffixes(node, "ab");
+
+        assertThat(allSuffixes, hasItems("abc", "abcde", "abcdef"));
     }
 }
