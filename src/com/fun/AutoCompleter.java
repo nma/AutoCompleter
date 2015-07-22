@@ -10,7 +10,7 @@ import java.util.List;
 public class AutoCompleter {
 
     private File inputFile;
-    private Trie trie;
+    public Trie trie;
 
     public AutoCompleter(File inputFile) {
         this.inputFile = inputFile;
@@ -31,9 +31,9 @@ public class AutoCompleter {
     public List<String> lookup(String prefix) {
         List<String> potentialCandidates = new ArrayList<>();
         Trie.TrieNode prefixNode = trie.lookup(prefix);
-        if (prefixNode != null && !prefixNode.isWord) {
-            for (String suffix : trie.allSuffixes(prefixNode, prefix)) {
-                potentialCandidates.add(prefix + suffix);
+        if (prefixNode != null) {
+            for (String matches : trie.allSuffixes(prefixNode, prefix)) {
+                potentialCandidates.add(matches);
             }
         }
         return potentialCandidates;

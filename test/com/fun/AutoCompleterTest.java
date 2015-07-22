@@ -29,8 +29,11 @@ public class AutoCompleterTest {
         p.preprocess();
 
         List<String> words = p.lookup("arm");
-        assertThat(words.size(), is(6));
-        assertThat(words, hasItems("armchair", "armour", "armoires"));
+        assertThat(words.size(), is(7));
+        assertThat(words, hasItems("arm", "armchair", "armour", "armoires"));
         assertThat(words, not(hasItems("armchairer", "armourz", "armoirers")));
+
+        List<String> wordsNothing = p.lookup("notfound");
+        assertThat(wordsNothing.size(), is(0));
     }
 }
