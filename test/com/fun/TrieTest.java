@@ -17,13 +17,18 @@ public class TrieTest {
 
         Trie.TrieNode gotNode = t.getRoot();
         assertThat(gotNode, is(notNullValue()));
-        assertThat(gotNode.children.size(), is(0));
-        assertThat(gotNode.matches, hasItem("a"));
-        assertThat(gotNode.label, is("a"));
+        assertThat(gotNode.children.size(), is(1));
+        assertThat(gotNode.isWord, is(false));
+        assertThat(gotNode.key, is(nullValue()));
+
+        Trie.TrieNode insertedNode = gotNode.children.get("a");
+        assertThat(insertedNode.children.size(), is(0));
+        assertThat(insertedNode.isWord, is(true));
+        assertThat(insertedNode.key, is("a"));
     }
 
     @Test
-    public void testTrieInsertion() {
+    public void testTrieInsertionAndSearch() {
 
         String[] testStrings = new String[] {
             "abc", "a", "abcde"
@@ -34,7 +39,9 @@ public class TrieTest {
             t.insert(line);
         }
 
-        //assertThat(t.getNodes(), is(5));
-        //assertThat(t.getHeight(), is(5));
+        assertThat(t.find("a"), is(true));
+        assertThat(t.find("ab"), is(false));
+        assertThat(t.find("abc"), is(true));
+        assertThat(t.find("abcde"), is(true));
     }
 }

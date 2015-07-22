@@ -1,7 +1,7 @@
 package com.fun;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by nickma on 2015-07-21.
@@ -13,19 +13,17 @@ public class Trie {
     }
 
     public static class TrieNode {
-        public String label;
-        public Boolean isWord;
+        public String key;
+        public Boolean isWord = false;
 
-        public HashSet<String> matches = new HashSet<>();
-        public ArrayList<TrieNode> children = new ArrayList<>();
+        public HashMap<String, TrieNode> children = new HashMap<>();
+
+        public TrieNode(String key) {
+            this.key = key;
+        }
     }
 
-    private int height;
-    private TrieNode root;
-
-    public int getHeight() {
-        return height;
-    }
+    private TrieNode root = new TrieNode(null);
 
     public void insert(String line) {
 
@@ -33,12 +31,40 @@ public class Trie {
             return;
         }
 
-        if (root == null) {
-            root = new TrieNode();
-            root.isWord = true;
-            root.label = line.substring(0, 1);
-
-            root.matches.add(line);
+        TrieNode curNode = getRoot();
+        for (int i = 0; i < line.length(); i++) {
+            String ch = line.substring(i, i + 1);
+            TrieNode nextNode = curNode.children.get(ch);
+            if (nextNode == null) {
+                nextNode = new TrieNode(ch);
+                curNode.children.put(ch, nextNode);
+            }
+            curNode = nextNode;
         }
+        curNode.isWord = true;
+    }
+
+    public boolean find(String line) {
+        boolean found = false;
+
+        if (line == null || line.isEmpty()) {
+            return found;
+        }
+
+        TrieNode curNode = getRoot();
+        for (int i = 0; i < line.length(); i++) {
+            String ch = line.substring(i, i + 1);
+            if (curNode.children.containsKey(ch)) {
+                curNode = curNode.children.get(ch);
+            } else {
+                return found;
+            }
+        }
+
+        if (curNode.isWord) {
+            found = true;
+        }
+
+        return found;
     }
 }
