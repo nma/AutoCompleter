@@ -1,10 +1,11 @@
 package com.fun.Trie;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.rmi.UnexpectedException;
+import java.util.*;
 
 /**
  * Created by nickma on 2015-07-22.
+ * Updated 2015-07-25.
  */
 public class CompressedTrie implements Trie {
 
@@ -20,11 +21,60 @@ public class CompressedTrie implements Trie {
     }
 
     /**
-     * Locates redundant nodes in a Trie and merges them into a squashed TrieNode
-     * @param trie
+     * Single Branch compressions
+     *
+     * Definition:
+     * Node is compressed all redundant nodes are removed and their keys are appended in order to the resultant node.
+     *
+     * Signatures:
+     * -- Input: Given a chain of redundant Nodes and the TerminalNode
+     * -- Output: Output one new Node that includes the key of the previously redundant nodes
+     *
+     * Constraints:
+     * -- The last node must end in a word
+     *
+     * @param nodesToCompress
+     * @return the compressedNode
      */
+     /* package private */ static TrieNode compressBranch(List<TrieNode> nodesToCompress) throws UnexpectedException {
+        StringBuilder sb = new StringBuilder();
+        TrieNode terminalNode = nodesToCompress.get(nodesToCompress.size() - 1);
+        if (!terminalNode.isWord) {
+            throw new UnexpectedException("Expected Terminal Node to be the end of a word.");
+        }
+        nodesToCompress.remove(terminalNode);
+
+        for (TrieNode node : nodesToCompress) {
+            if (!isRedundantNode(node)) {
+                throw new UnexpectedException("Expected Node to be redundant.");
+            }
+            sb.append(node.key);
+        }
+
+        sb.append(terminalNode.key);
+        terminalNode.key = sb.toString();
+
+        return terminalNode;
+    }
+
+    /**
+     * Definitions:
+     * -- Redundant Node is equivalent to a (non-root) node that is not a Word and only has 1 child.
+     *
+     * @param node
+     * @return
+     */
+     /* package private */ static boolean isRedundantNode(TrieNode node) {
+        // is root?
+        if (node.key == null) {
+            return false;
+        }
+
+        return (!node.isWord && node.children.size() == 1);
+    }
+
     private void compress(Trie trie) {
-        Set<TrieNode> redundantNodes = new HashSet<>();
+
     }
 
     @Override

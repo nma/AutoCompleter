@@ -31,8 +31,7 @@ public class AutoCompleter {
         } catch (IOException e) {
             throw new IllegalArgumentException("File not found.");
         }
-        // TODO: add compressed Trie after implementation is done
-        // trieDicitonary = new CompressedTrie(trieDictionary);
+        trieDictionary = new CompressedTrie(trieDictionary);
     }
 
     public List<String> lookup(String prefix) {
