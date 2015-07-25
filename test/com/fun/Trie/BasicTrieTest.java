@@ -1,4 +1,4 @@
-package com.fun;
+package com.fun.Trie;
 
 import com.fun.Trie.BasicTrie;
 import com.fun.Trie.TrieNode;
