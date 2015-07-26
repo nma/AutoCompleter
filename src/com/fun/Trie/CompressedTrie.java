@@ -1,6 +1,5 @@
 package com.fun.Trie;
 
-import java.rmi.UnexpectedException;
 import java.util.*;
 
 /**
@@ -11,12 +10,8 @@ public class CompressedTrie implements Trie {
 
     private TrieNode root;
 
-    public CompressedTrie() {
-        root = null;
-    }
-
     public CompressedTrie(Trie trie) {
-        root = new TrieNode(null);
+        root = trie.getRoot();
         compress(trie);
     }
 
@@ -36,17 +31,17 @@ public class CompressedTrie implements Trie {
      * @param nodesToCompress
      * @return the compressedNode
      */
-     /* package private */ static TrieNode compressBranch(List<TrieNode> nodesToCompress) throws UnexpectedException {
+     /* package private */ static TrieNode compressBranch(List<TrieNode> nodesToCompress) throws IllegalArgumentException {
         StringBuilder sb = new StringBuilder();
         TrieNode terminalNode = nodesToCompress.get(nodesToCompress.size() - 1);
         if (!terminalNode.isWord) {
-            throw new UnexpectedException("Expected Terminal Node to be the end of a word.");
+            throw new IllegalArgumentException("Expected Terminal Node to be the end of a word.");
         }
         nodesToCompress.remove(terminalNode);
 
         for (TrieNode node : nodesToCompress) {
             if (!isRedundantNode(node)) {
-                throw new UnexpectedException("Expected Node to be redundant.");
+                throw new IllegalArgumentException("Expected Node to be redundant.");
             }
             sb.append(node.key);
         }
@@ -73,8 +68,43 @@ public class CompressedTrie implements Trie {
         return (!node.isWord && node.children.size() == 1);
     }
 
-    private void compress(Trie trie) {
+    /**
+     * Process for compressing a Trie is as follows with built up sub-components.
+     *
+     * Firstly Depth First Search Traverse all the branches of the Trie, caching the chain of redundant nodes.
+     * Then passing it into #compressBranch which will return the new collapsed Node.
+     *
+     * Could be made into a recusively for better readability, but iteratively was better to validate correctness.
+     *
+     * @param trie
+     */
+    private void compress(Trie trie) throws IllegalArgumentException {
+        Stack<TrieNode> workQueue = new Stack<>();
+        workQueue.add(trie.getRoot());
 
+        List<TrieNode> curBranchToCompress = new ArrayList<>();
+        while (!workQueue.isEmpty()) {
+            TrieNode curNode = workQueue.pop();
+
+            // do work here
+            if (isRedundantNode(curNode)) {
+                curBranchToCompress.add(curNode);
+            } else if (curNode.isWord) {
+                curBranchToCompress.add(curNode);
+                TrieNode parentNode = curBranchToCompress.get(0).parent;
+                TrieNode compressedNode = compressBranch(curBranchToCompress);
+
+                parentNode.children.remove(compressedNode.key.substring(0, 1));
+                parentNode.children.put(compressedNode.key, compressedNode);
+
+                curBranchToCompress.clear();
+            }
+
+            // tail conditions
+            for (TrieNode node: curNode.children.values()) {
+                workQueue.add(node);
+            }
+        }
     }
 
     @Override
@@ -89,16 +119,75 @@ public class CompressedTrie implements Trie {
 
     @Override
     public boolean find(String line) {
+        String stringSoFar = "";
+        if (line == null || line.isEmpty()) {
+            return false;
+        }
+
+        TrieNode curNode = getRoot();
+        String prefixSeen = "";
+        for (int i = 0; i < line.length(); i++) {
+            String ch = line.substring(i, i + 1);
+            String key = prefixSeen + ch;
+            if (curNode.children.containsKey(key)) {
+                curNode = curNode.children.get(key);
+                prefixSeen = "";
+                stringSoFar += key;
+            } else {
+                prefixSeen += ch;
+            }
+        }
+
+        if (stringSoFar.equals(line) && curNode.isWord) {
+            return true;
+        }
+
         return false;
     }
 
     @Override
     public TrieNode lookup(String prefix) {
+        if (prefix == null || prefix.isEmpty()) {
+            return null;
+        }
+
+        TrieNode curNode = getRoot();
+        String prefixSeen = "";
+        for (int i = 0; i < prefix.length(); i++) {
+            String ch = prefix.substring(i, i + 1);
+            String key = prefixSeen + ch;
+            if (curNode.children.containsKey(key)) {
+                curNode = curNode.children.get(key);
+                prefixSeen = "";
+            } else {
+                prefixSeen += ch;
+            }
+        }
+        for (Map.Entry<String, TrieNode> entry : curNode.children.entrySet()) {
+            if (entry.getKey().startsWith(prefix)) {
+                curNode = entry.getValue();
+            }
+        }
+
         return null;
     }
 
     @Override
     public Set<String> allSuffixes(TrieNode node, String prefix) {
-        return null;
+        Set<String> foundSuffixes = new HashSet<>();
+
+        if (node.isWord) {
+            foundSuffixes.add(prefix);
+        }
+
+        if (node.children.isEmpty()) {
+            return foundSuffixes;
+        }
+
+        for (TrieNode childNode : node.children.values()) {
+            foundSuffixes.addAll(allSuffixes(childNode, prefix + childNode.key));
+        }
+
+        return foundSuffixes;
     }
 }

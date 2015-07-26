@@ -15,23 +15,23 @@ import java.util.List;
 public class AutoCompleter {
 
     private File inputFile;
-    public Trie trieDictionary;
+    public CompressedTrie trieDictionary;
 
     public AutoCompleter(File inputFile) {
         this.inputFile = inputFile;
     }
 
     public void preprocess() {
-        trieDictionary = new BasicTrie();
+        Trie basicTrie = new BasicTrie();
         try (BufferedReader br = new BufferedReader(new FileReader(inputFile))) {
             String line = "";
             while ((line = br.readLine()) != null) {
-                trieDictionary.insert(line);
+                basicTrie.insert(line);
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("File not found.");
         }
-        trieDictionary = new CompressedTrie(trieDictionary);
+        trieDictionary = new CompressedTrie(basicTrie);
     }
 
     public List<String> lookup(String prefix) {

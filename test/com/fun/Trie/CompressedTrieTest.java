@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
  */
 public class CompressedTrieTest {
 
-    //@Test
+    @Test
     public void testCompressedTrieMaintiansTheSameLookup() {
 
         BasicTrie t = new BasicTrie();
@@ -27,16 +27,19 @@ public class CompressedTrieTest {
         t.insert("abcdef");
 
         CompressedTrie compressedTrie = new CompressedTrie(t);
-        TrieNode node = compressedTrie.lookup("ab");
-        Set<String> gotAllSuffixes = compressedTrie.allSuffixes(node, "ab");
+        Set<String> gotAllSuffixes = compressedTrie.allSuffixes(compressedTrie.getRoot().children.get("abc"), "abc");
 
-        TrieNode basicNode = t.lookup("ab");
-        Set<String> expAllSuffixes = t.allSuffixes(basicNode, "ab");
+        BasicTrie expectedLookup = new BasicTrie();
+        expectedLookup.insert("abc");
+        expectedLookup.insert("abcde");
+        expectedLookup.insert("abcdef");
+        TrieNode basicNode = expectedLookup.lookup("ab");
+        Set<String> expAllSuffixes = expectedLookup.allSuffixes(basicNode, "ab");
 
         assertThat(gotAllSuffixes, is(equalTo(expAllSuffixes)));
     }
 
-    //@Test
+    @Test
     public void testCompressSingleRedundantNodeTest() {
         BasicTrie t = new BasicTrie();
         t.insert("ab");
@@ -66,7 +69,7 @@ public class CompressedTrieTest {
     }
 
     @Test
-    public void testCompressChainOfRedundantNodes() throws UnexpectedException {
+    public void testCompressChainOfRedundantNodes() throws IllegalArgumentException {
         List<TrieNode> redundantChain = new ArrayList<>();
         TrieNode prevNode = null;
         // build our chain of redundant nodes start -> end
@@ -85,8 +88,8 @@ public class CompressedTrieTest {
         assertThat(compressedNode.key, is("weekend"));
     }
 
-    @Test(expected=UnexpectedException.class)
-    public void testCompressChainOfRedundantNodesException() throws UnexpectedException {
+    @Test(expected=IllegalArgumentException.class)
+    public void testCompressChainOfRedundantNodesException() throws IllegalArgumentException {
         List<TrieNode> redundantChain = new ArrayList<>();
         redundantChain.add(new TrieNode("p"));
 

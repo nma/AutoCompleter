@@ -29,6 +29,7 @@ public class BasicTrie implements Trie {
                 nextNode = new TrieNode(ch);
                 curNode.children.put(ch, nextNode);
             }
+            nextNode.parent = curNode;
             curNode = nextNode;
         }
         curNode.isWord = true;
@@ -36,14 +37,25 @@ public class BasicTrie implements Trie {
 
     @Override
     public boolean find(String line) {
-        boolean found = false;
-
-        TrieNode closestMatch = lookup(line);
-        if (closestMatch != null && closestMatch.isWord) {
-            found = true;
+        if (line == null || line.isEmpty()) {
+            return false;
         }
 
-        return found;
+        TrieNode curNode = getRoot();
+        for (int i = 0; i < line.length(); i++) {
+            String ch = line.substring(i, i + 1);
+            if (curNode.children.containsKey(ch)) {
+                curNode = curNode.children.get(ch);
+            } else {
+                return false;
+            }
+        }
+
+        if (curNode.isWord) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -58,7 +70,7 @@ public class BasicTrie implements Trie {
             if (curNode.children.containsKey(ch)) {
                 curNode = curNode.children.get(ch);
             } else {
-                return null;
+                break;
             }
         }
 

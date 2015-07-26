@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class TrieNode {
     public String key;
     public Boolean isWord = false;
-
+    public TrieNode parent = null;
     public HashMap<String, TrieNode> children = new HashMap<>();
 
     public TrieNode(String key) {
