@@ -10,10 +10,10 @@ import java.util.List;
 public class Main {
 
     private static class Arguments {
-        @Option(name = "-searchFile",usage="the file to auto complete from.")
+        @Option(name = "-f",usage="the file to auto complete from.")
         public String fileName;
 
-        @Option(name = "-searchStrings",usage="the comma seperated string to auto complete.")
+        @Option(name = "-s",usage="the comma seperated string to auto complete.")
         public String autoCompleteStrings;
     }
 
