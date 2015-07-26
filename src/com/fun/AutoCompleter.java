@@ -37,7 +37,7 @@ public class AutoCompleter {
     public List<String> lookup(String prefix) {
         List<String> potentialCandidates = new ArrayList<>();
         TrieNode prefixNode = trieDictionary.lookup(prefix);
-        if (prefixNode != null) {
+        if (prefixNode != null && prefixNode.key != null) {
             for (String matches : trieDictionary.allSuffixes(prefixNode, prefix)) {
                 potentialCandidates.add(matches);
             }

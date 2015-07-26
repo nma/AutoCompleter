@@ -117,6 +117,7 @@ public class CompressedTrie implements Trie {
         throw new UnsupportedOperationException("No new insertions inside a compressed Trie supported at this time.");
     }
 
+    // TODO: figure out how to convert variable length string keys into a fixed size key lookup
     @Override
     public boolean find(String line) {
         String stringSoFar = "";
@@ -147,6 +148,7 @@ public class CompressedTrie implements Trie {
 
     @Override
     public TrieNode lookup(String prefix) {
+        String stringSoFar = "";
         if (prefix == null || prefix.isEmpty()) {
             return null;
         }
@@ -163,13 +165,10 @@ public class CompressedTrie implements Trie {
                 prefixSeen += ch;
             }
         }
-        for (Map.Entry<String, TrieNode> entry : curNode.children.entrySet()) {
-            if (entry.getKey().startsWith(prefix)) {
-                curNode = entry.getValue();
-            }
-        }
 
-        return null;
+        prefix = stringSoFar;
+
+        return curNode;
     }
 
     @Override
