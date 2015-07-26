@@ -1,9 +1,12 @@
-package com.fun;
+package main.com.fun;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.hasItems;
@@ -19,8 +22,19 @@ public class AutoCompleterTest {
     private File testFile;
 
     @Before
-    public void setUp() {
-        testFile = new File(AutoCompleterTest.class.getResource("/data/test1").getPath());
+    public void setUp() throws IOException {
+        testFile = File.createTempFile("autocompleter", "tmp");
+        testFile.deleteOnExit();
+
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(testFile))) {
+            bw.write("arm\n" +
+                    "armchair\n" +
+                    "armour\n" +
+                    "armoured\n" +
+                    "armoire\n" +
+                    "armoired\n" +
+                    "armoires");
+        }
     }
 
     @Test

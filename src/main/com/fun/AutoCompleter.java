@@ -1,9 +1,9 @@
-package com.fun;
+package main.com.fun;
 
-import com.fun.Trie.CompressedTrie;
-import com.fun.Trie.BasicTrie;
-import com.fun.Trie.Trie;
-import com.fun.Trie.TrieNode;
+import main.com.fun.Trie.BasicTrie;
+import main.com.fun.Trie.CompressedTrie;
+import main.com.fun.Trie.Trie;
+import main.com.fun.Trie.TrieNode;
 
 import java.io.*;
 import java.util.ArrayList;

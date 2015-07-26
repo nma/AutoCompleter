@@ -1,4 +1,4 @@
-package com.fun;
+package main.com.fun;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -13,7 +13,7 @@ public class Main {
         @Option(name = "-f",usage="the file to auto complete from.")
         public String fileName;
 
-        @Option(name = "-s",usage="the comma seperated string to auto complete.")
+        @Option(name = "-s",usage="the comma seperated string to auto complete.", required=false)
         public String autoCompleteStrings;
     }
 
@@ -25,6 +25,10 @@ public class Main {
         File inputFile = new File(arguments.fileName);
         AutoCompleter autoCompleter = new AutoCompleter(inputFile);
         autoCompleter.preprocess();
+
+        if (arguments.autoCompleteStrings == null) {
+            return;
+        }
 
         for (String stringToAutoComplete : arguments.autoCompleteStrings.split(",")) {
             System.out.println("AutoComplete: " + stringToAutoComplete);

@@ -1,7 +1,5 @@
-package com.fun.Trie;
+package main.com.fun.Trie;
 
-import com.fun.Trie.BasicTrie;
-import com.fun.Trie.TrieNode;
 import org.junit.Test;
 
 import java.util.Set;

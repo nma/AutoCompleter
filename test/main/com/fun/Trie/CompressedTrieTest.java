@@ -1,8 +1,7 @@
-package com.fun.Trie;
+package main.com.fun.Trie;
 
 import org.junit.Test;
 
-import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
